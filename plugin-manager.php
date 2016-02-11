@@ -43,13 +43,16 @@ class PluginManager {
 	 */
 	private function __clone() { }
 	
+	/**
+	 *	Add actions
+	 */
 	private function __construct() {
 		//declare hooks
 		add_action( 'network_admin_menu', array( &$this, 'add_menu' ) );
 		add_action( 'wpmu_new_blog', array( &$this, 'new_blog' ), 50 ); //auto activation hook
 		add_filter( 'all_plugins', array( &$this, 'remove_plugins' ) );
 		add_filter( 'plugin_action_links', array( &$this, 'action_links' ), 10, 4 );
-		//add_filter( 'active_plugins', array( &$this, 'check_activated' ) );
+
 		add_action( 'admin_notices', array( &$this, 'supporter_message' ) );
 		add_action( 'plugins_loaded', array( &$this, 'localization' ) );
 
@@ -61,14 +64,27 @@ class PluginManager {
 		add_action( 'admin_init', array( &$this, 'remove_plugin_update_row' ) );
 	}
 
+	/**
+	 *	Load translations
+	 *
+	 *	@action plugins_loaded
+	 */
 	function localization() {
 		load_plugin_textdomain('pm', false, '/multisite-plugin-manager/languages/');
 	}
 
+	/**
+	 *	Add Network admin menu item
+	 *
+	 *	@action network_admin_menu
+	 */
 	function add_menu() {
 		add_submenu_page( 'plugins.php', __('Plugin Management', 'pm'), __('Plugin Management', 'pm'), 'manage_network_options', 'plugin-management', array( &$this, 'admin_page' ) );
 	}
 
+	/**
+	 *	Display Network admin page
+	 */
 	function admin_page() {
 
 		if (!current_user_can('manage_network_options'))
@@ -194,12 +210,15 @@ class PluginManager {
 	} //end admin_page()
 	
 	
-	function get_controllable_plugins(){
-		$auto_activate = (array)get_site_option('pm_auto_activate_list');
-		$user_control = (array)get_site_option('pm_user_control_list');
-		$supporter_control = (array)get_site_option('pm_supporter_control_list');
-		$override_plugins = (array)get_option('pm_plugin_override_list');
-		
+	/**
+	 *	Return all plugins that can be controlled by current blog admin
+	 */
+	function get_controllable_plugins() {
+		$auto_activate		= (array) get_site_option('pm_auto_activate_list');
+		$user_control		= (array) get_site_option('pm_user_control_list');
+		$supporter_control	= (array) get_site_option('pm_supporter_control_list');
+		$override_plugins	= (array) get_option('pm_plugin_override_list');
+
 		// check if $override_plugins is not a numeric array
 		if ( 0 === array_sum( array_keys( $override_plugins ) ) ) {
 			$override_allow = array_keys( array_filter( $override_plugins, array($this,'_filter_value_1') ) );
@@ -220,14 +239,25 @@ class PluginManager {
 		// here we go.
 		return $controllable_plugins;
 	}
-	function _filter_value_0( $value ) {
+	/**
+	 *	array_filter() filter function
+	 */
+	private function _filter_value_0( $value ) {
 		return $value === '0';
 	}
-	function _filter_value_1( $value ) {
+	/**
+	 *	array_filter() filter function
+	 */
+	private function _filter_value_1( $value ) {
 		return $value === '1';
 	}
 
-	//removes the meta information for normal admins
+	//
+	/**
+	 *	removes the meta information for normal admins
+	 *
+	 *	@filter	plugin_row_meta
+	 */
 	function remove_plugin_meta($plugin_meta, $plugin_file) {
 		if ( is_network_admin() || is_super_admin() ) {
 			return $plugin_meta;
@@ -237,12 +267,20 @@ class PluginManager {
 		}
 	}
 
+	/**
+	 *	@action	admin_init
+	 */
 	function remove_plugin_update_row() {
 		if ( !is_network_admin() && !is_super_admin() ) {
 			remove_all_actions('after_plugin_row');
 		}
 	}
 
+	/**
+	 *	Process Network admin page form
+	 *
+	 *	@usedby admin_page
+	 */
 	function process_form() {
 
 		if (isset($_GET['mass_activate'])) {
@@ -284,7 +322,11 @@ class PluginManager {
 		}
 	}
 
-	//options added to wpmu-blogs.php edit page. Overrides sitewide control settings for an individual blog.
+	/**
+	 *	options added to wpmu-blogs.php edit page. Overrides sitewide control settings for an individual blog.
+	 *
+	 *	@action wpmueditblogaction
+	 */
 	function blog_options_form($blog_id) {
 
 		switch_to_blog($blog_id);
@@ -376,7 +418,12 @@ class PluginManager {
 		restore_current_blog();
 	}
 
-	//process options from wpmu-blogs.php edit page. Overrides sitewide control settings for an individual blog.
+	//
+	/**
+	 *	process options from wpmu-blogs.php edit page. Overrides sitewide control settings for an individual blog.
+	 *
+	 *	@action wpmu_update_blog_options
+	 */
 	function blog_options_form_process() {
 		if ( isset( $_POST['deactivate-plugin'] ) ) {
 			deactivate_plugins($_POST['deactivate-plugin']);
@@ -394,18 +441,27 @@ class PluginManager {
 		}
 	}
 
-	//activate on new blog
-	function new_blog($blog_id) {
+	/**
+	 *	activate on new blog
+	 *
+	 *	@action wpmu_new_blog
+	 */
+	function new_blog( $blog_id ) {
 		require_once( ABSPATH.'wp-admin/includes/plugin.php' );
 
-		$auto_activate = (array)get_site_option('pm_auto_activate_list');
-		if (count($auto_activate)) {
-		switch_to_blog($blog_id);
+		$auto_activate = (array) get_site_option('pm_auto_activate_list');
+		if ( count( $auto_activate ) ) {
+			switch_to_blog($blog_id);
 			activate_plugins($auto_activate, '', false); //silently activate any plugins
 			restore_current_blog();
 		}
 	}
 
+	/**
+	 *	Mass activate
+	 *
+	 *	@usedby process_form
+	 */
 	function mass_activate($plugin) {
 		global $wpdb;
 		
@@ -429,6 +485,11 @@ class PluginManager {
 		}
 	}
 
+	/**
+	 *	Mass deactivate
+	 *
+	 *	@usedby process_form
+	 */
 	function mass_deactivate($plugin) {
 		global $wpdb;
 
@@ -452,7 +513,11 @@ class PluginManager {
 		}
 	}
 
-	//remove plugins with no user control
+	/**
+	 *	remove plugins with no user control
+	 *
+	 *	@filter all_plugins
+	 */
 	function remove_plugins($all_plugins) {
 
 		if (is_super_admin()) //don't filter siteadmin
@@ -468,7 +533,11 @@ class PluginManager {
 		return $all_plugins;
 	}
 
-	//plugin activate links
+	/**
+	 *	plugin activate links
+	 *
+	 *	@filter plugin_action_links
+	 */
 	function action_links($action_links, $plugin_file, $plugin_data, $context) {
 		global $psts, $blog_id;
 		
@@ -497,7 +566,11 @@ class PluginManager {
 		return $action_links;
 	}
 
-	//show supporter message if plugin exists
+	/**
+	 *	show supporter message if plugin exists
+	 *
+	 *	@filter admin_notices
+	 */
 	function supporter_message() {
 		global $pagenow;
 
@@ -515,52 +588,16 @@ class PluginManager {
 		return;
 	}
 
-	//use jquery to remove associated checkboxes to prevent mass activation (usability, not security)
+	//
+	/**
+	 *	use jquery to remove associated checkboxes to prevent mass activation (usability, not security)
+	 *
+	 *	@action after_plugin_row_$plugin_file
+	 */
 	function remove_checks($plugin_file) {
 		echo '<script type="text/javascript">jQuery("input:checkbox[value=\''.esc_js($plugin_file).'\']).remove();</script>';
 	}
 
-	/*
-	Removes activated plugins that should not have been activated (multi). Single activations
-	are additionaly protected by a nonce field. Dirty hack in case someone uses firebug or
-	something to hack the post and simulate a bulk activation. I'd rather prevent
-	them from being activated in the first place, but there are no hooks for that! The
-	display will show the activated status, but really they are not. Only hacking attempts
-	will see this though! */
-	
-	function check_activated($active_plugins) {
-
-		if (is_super_admin()) //don't filter siteadmin
-			return $active_plugins;
-
-		//only perform check right after activation hack attempt
-		if ($_POST['action'] != 'activate-selected' && $_POST['action2'] != 'activate-selected')
-			return $active_plugins;
-
-		$auto_activate = (array)get_site_option('pm_auto_activate_list');
-		$user_control = (array)get_site_option('pm_user_control_list');
-		$supporter_control = (array)get_site_option('pm_supporter_control_list');
-		$override_plugins = (array)get_option('pm_plugin_override_list');
-
-		foreach ( (array)$active_plugins as $plugin_file => $plugin_data) {
-			if (in_array($plugin_file, $user_control) || in_array($plugin_file, $auto_activate) || in_array($plugin_file, $supporter_control) || in_array($plugin_file, $override_plugins)) {
-				//do nothing - leave it in
-			} else {
-				deactivate_plugins($plugin_file, true); //silently remove any plugins
-				unset($active_plugins[$plugin_file]);
-			}
-		}
-
-		if ( function_exists('is_pro_site') ) {
-			if (count($supporter_control) && !is_pro_site()) {
-				deactivate_plugins($supporter_control, true); //silently remove any plugins
-				foreach ($supporter_control as $plugin_file)
-					unset($active_plugins[$plugin_file]);
-			}
-		}
-
-		return $active_plugins;
-	}
 }
 
 $pm = PluginManager::getInstance();
