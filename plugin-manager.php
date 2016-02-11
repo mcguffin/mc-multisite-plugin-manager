@@ -1,14 +1,15 @@
 <?php
 /*
-Plugin Name: Multisite Plugin Manager (mcguffin)
+Plugin Name: McMultisite Plugin Manager (mcguffin fork)
 Plugin URI: https://github.com/mcguffin/multisite-plugin-manager
 Description: This is a fork of <a href="https://github.com/uglyrobot/multisite-plugin-manager">https://github.com/uglyrobot/multisite-plugin-manager</a> by Aaron Edwards. The essential plugin for every multisite install! Manage plugin access permissions across your entire multisite network.
 Version: 3.2.0
-Author: Aaron Edwards, Jörn Lund
-Author URI: http://uglyrobot.com
+Author: Jörn Lund, Aaron Edwards
+Author URI: https://github.com/mcguffin
 Network: true
 
-Copyright 2009-2014 UglyRobot Web Development (http://uglyrobot.com)
+Copyright 2009-2014 UglyRobot Web Development (http://uglyrobot.com), 
+Copyright 2016 Jörn Lund (https://github.com/mcguffin)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
@@ -24,7 +25,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-class PluginManager {
+class McPluginManager {
 	
 	private static $instance = null;
 	
@@ -122,7 +123,8 @@ class PluginManager {
 							<th><?php _e('Name', 'pm'); ?></th>
 							<th><?php _e('Version', 'pm'); ?></th>
 							<th><?php _e('Author', 'pm'); ?></th>
-							<th title="<?php _e('Users may activate/deactivate', 'pm'); ?>"><?php _e('User Control', 'pm'); ?></th>
+							<th title="<?php _e('Users may activate/deactivate', 'pm'); ?>"><?php _e('Allow User Control', 'pm'); ?></th>
+							<th title="<?php _e('Auto activate on new Blogs', 'pm'); ?>"><?php _e('Auto activate', 'pm'); ?></th>
 							<th><?php _e('Mass Activate', 'pm'); ?></th>
 							<th><?php _e('Mass Deactivate', 'pm'); ?></th>
 						</tr>
@@ -144,32 +146,25 @@ class PluginManager {
 						<td><?php echo $p['Author']?></td>
 						<td>
 						<?php
-							echo '<select name="control['.$file.']" />'."\n";
-							$u_checked = in_array($file, $user_control);
-							$auto_checked = in_array($file, $auto_activate);
+							
+							$control_status = in_array($file, $user_control);
 
-							if ($u_checked) {
-								$n_opt = '';
-								$s_opt = '';
-								$a_opt = ' selected="yes"';
-								$auto_opt = '';
-							} else if ($auto_checked) {
-								$n_opt = '';
-								$s_opt = '';
-								$a_opt = '';
-								$auto_opt = ' selected="yes"';
-							}else {
-								$n_opt = ' selected="yes"';
-								$s_opt = '';
-								$a_opt = '';
-								$auto_opt = '';
-							}
-							$opts = '<option value="none"'.$n_opt.'>' . __('Deny', 'pm') . '</option>'."\n";
-							$opts .= '<option value="all"'.$a_opt.'>' . __('Allow', 'pm') . '</option>'."\n";
-							$opts .= '<option value="auto"'.$auto_opt.'>' . __('Allow and Auto-Activate', 'pm') . '</option>'."\n";
+							printf( '<input type="checkbox" name="pm_user_control[]" value="%s" %s />',
+									$file,
+									checked($control_status, true, false )
+								);
 
-							echo $opts.'</select>';
 						?>
+						</td>
+						<td>
+							<?php
+							
+							$auto_status = in_array($file, $auto_activate);
+							printf( '<input type="checkbox" name="pm_auto_activate[]" value="%s" %s />',
+									$file,
+									checked($auto_status, true, false )
+								);
+							?>
 						</td>
 						<td><?php echo "<a href='plugins.php?page=plugin-management&mass_activate=$file'>" . __('Activate All', 'pm') . "</a>" ?></td>
 						<td><?php echo "<a href='plugins.php?page=plugin-management&mass_deactivate=$file'>" . __('Deactivate All', 'pm') . "</a>" ?></td>
@@ -187,70 +182,6 @@ class PluginManager {
 	} //end admin_page()
 	
 	
-	/**
-	 *	Return all plugins that can be controlled by current blog admin
-	 */
-	function get_controllable_plugins() {
-		$auto_activate		= (array) get_site_option('pm_auto_activate_list');
-		$user_control		= (array) get_site_option('pm_user_control_list');
-		$override_plugins	= (array) get_option('pm_plugin_override_list');
-
-		// check if $override_plugins is not a numeric array
-		if ( 0 === array_sum( array_keys( $override_plugins ) ) ) {
-			$override_allow = array_keys( array_filter( $override_plugins, array($this,'_filter_value_1') ) );
-			$override_deny  = array_keys( array_filter( $override_plugins, array($this,'_filter_value_0') ) );
-		} else {
-			// old style: $override_plugins contains controllabla plugins
-			$override_allow = $override_plugins;
-			$override_deny = array();
-		}
-		
-		
-		// merge allowed plugins
-		$controllable_plugins = array_unique( array_merge( $auto_activate, $user_control, $override_allow ) );
-		
-		// subtract denied plugins
-		$controllable_plugins = array_diff($controllable_plugins, $override_deny );
-
-		// here we go.
-		return $controllable_plugins;
-	}
-	/**
-	 *	array_filter() filter function
-	 */
-	private function _filter_value_0( $value ) {
-		return $value === '0';
-	}
-	/**
-	 *	array_filter() filter function
-	 */
-	private function _filter_value_1( $value ) {
-		return $value === '1';
-	}
-
-	//
-	/**
-	 *	removes the meta information for normal admins
-	 *
-	 *	@filter	plugin_row_meta
-	 */
-	function remove_plugin_meta($plugin_meta, $plugin_file) {
-		if ( is_network_admin() || is_super_admin() ) {
-			return $plugin_meta;
-		} else {
-			remove_all_actions("after_plugin_row_$plugin_file");
-			return array();
-		}
-	}
-
-	/**
-	 *	@action	admin_init
-	 */
-	function remove_plugin_update_row() {
-		if ( !is_network_admin() && !is_super_admin() ) {
-			remove_all_actions('after_plugin_row');
-		}
-	}
 
 	/**
 	 *	Process Network admin page form
@@ -267,28 +198,22 @@ class PluginManager {
 			$plugin = $_GET['mass_deactivate'];
 			$this->mass_deactivate($plugin);
 		}
+		$all_plugin_files = array_keys(get_plugins());
 
-		if (isset($_POST['control'])) {
-			//create blank arrays
-			$user_control = array();
-			$auto_activate = array();
-			foreach ($_POST['control'] as $plugin => $value) {
-				if ($value == 'none') {
-				  //do nothing
-				} else if ($value == 'all') {
-					$user_control[] = $plugin;
-				} else if ($value == 'auto') {
-					$auto_activate[] = $plugin;
-			  }
-			}
-			update_site_option('pm_user_control_list', array_unique($user_control));
-			update_site_option('pm_auto_activate_list', array_unique($auto_activate));
+		if ( isset( $_POST['pm_user_control'] ) ) {
+			// check input data
+			$user_control = (array) $_POST['pm_user_control'];
+			$user_control = array_unique( $user_control );
+			$user_control = array_intersect( $user_control, $all_plugin_files );
+			update_site_option('pm_user_control_list', $user_control );
+		}
 
-			//can't save blank value via update_site_option
-			if (!$user_control)
-				update_site_option('pm_user_control_list', 'EMPTY');
-			if (!$auto_activate)
-				update_site_option('pm_auto_activate_list', 'EMPTY');
+		if ( isset( $_POST['pm_auto_activate'] ) ) {
+			// check input data
+			$auto_activate = (array) $_POST['pm_auto_activate'];
+			$auto_activate = array_unique( $auto_activate );
+			$auto_activate = array_intersect( $auto_activate, $all_plugin_files );
+			update_site_option('pm_auto_activate_list', $auto_activate );
 		}
 	}
 
@@ -347,17 +272,17 @@ class PluginManager {
 					if ( in_array( $file, $auto_activate ) ) {
 						?><span style="color:#093"><?php
 						?><span class="dashicons dashicons-yes"></span><?php
-						_e('Allow and Auto-Activate', 'pm');
+							_e('Allow and Auto-Activate', 'pm');
 						?></span><?php
 					} else if ( in_array( $file, $user_control ) ) {
 						?><span style="color:#093"><?php
 						?><span class="dashicons dashicons-yes"></span><?php
-						_e('Allow', 'pm');
+							_e('Allow', 'pm');
 						?></span><?php
 					} else {
 						?><span style="color:#aaa"><?php
 						?><span class="dashicons dashicons-no-alt"></span><?php
-						_e('Deny', 'pm');
+							_e('Deny', 'pm');
 						?></span><?php
 					}
 				?></td>
@@ -372,8 +297,8 @@ class PluginManager {
 								selected($value, $plugin_status ), 
 								$label
 							);
-					  }
-					  echo '</select>'
+					}
+					echo '</select>'
 				?>
 				</td>
 				<td><?php 
@@ -490,6 +415,70 @@ class PluginManager {
 	}
 
 	/**
+	 *	Return all plugins that can be controlled by current blog admin
+	 */
+	function get_controllable_plugins() {
+		$auto_activate		= (array) get_site_option('pm_auto_activate_list');
+		$user_control		= (array) get_site_option('pm_user_control_list');
+		$override_plugins	= (array) get_option('pm_plugin_override_list');
+
+		// check if $override_plugins is not a numeric array
+		if ( 0 === array_sum( array_keys( $override_plugins ) ) ) {
+			$override_allow = array_keys( array_filter( $override_plugins, array($this,'_filter_value_1') ) );
+			$override_deny  = array_keys( array_filter( $override_plugins, array($this,'_filter_value_0') ) );
+		} else {
+			// old style: $override_plugins contains controllabla plugins
+			$override_allow = $override_plugins;
+			$override_deny = array();
+		}
+		
+		
+		// merge allowed plugins
+		$controllable_plugins = array_unique( array_merge( $auto_activate, $user_control, $override_allow ) );
+		
+		// subtract denied plugins
+		$controllable_plugins = array_diff($controllable_plugins, $override_deny );
+
+		// here we go.
+		return $controllable_plugins;
+	}
+	/**
+	 *	array_filter() filter function
+	 */
+	private function _filter_value_0( $value ) {
+		return $value === '0';
+	}
+	/**
+	 *	array_filter() filter function
+	 */
+	private function _filter_value_1( $value ) {
+		return $value === '1';
+	}
+
+	//
+	/**
+	 *	removes the meta information for normal admins
+	 *
+	 *	@filter	plugin_row_meta
+	 */
+	function remove_plugin_meta($plugin_meta, $plugin_file) {
+		if ( is_network_admin() || is_super_admin() ) {
+			return $plugin_meta;
+		} else {
+			remove_all_actions("after_plugin_row_$plugin_file");
+			return array();
+		}
+	}
+
+	/**
+	 *	@action	admin_init
+	 */
+	function remove_plugin_update_row() {
+		if ( !is_network_admin() && !is_super_admin() ) {
+			remove_all_actions('after_plugin_row');
+		}
+	}
+	/**
 	 *	remove plugins with no user control
 	 *
 	 *	@filter all_plugins
@@ -543,4 +532,4 @@ class PluginManager {
 
 }
 
-$pm = PluginManager::getInstance();
+$pm = McPluginManager::getInstance();

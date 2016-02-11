@@ -1,10 +1,10 @@
-=== Multisite Plugin Manager ===
+=== Multisite Plugin Manager (mcguffin fork) ===
 Contributors: uglyrobot
 Tags: multisite, wpmu, plugins
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=W66QWST9B9KRN
 Requires at least: 3.7.3
-Tested up to: 4.3.1
-Stable tag: 3.1.4
+Tested up to: 4.4.2
+Stable tag: 3.2.0
 
 The essential plugin for every multisite install! Manage plugin access permissions across your entire multisite network.
 
@@ -55,11 +55,6 @@ No, this plugin is only compatible (and useful) with Multisite installs.
 Not at all, but if you install the <a href="http://premium.wpmudev.org/project/pro-sites/">Pro Sites plugin from WPMU DEV</a> the options to charge for access to certain plugins will appear in the dropdowns.
 
 <a href="https://github.com/uglyrobot/multisite-plugin-manager">Contribute on GitHub</a>
-
-== Screenshots ==
-
-1. The plugin management admin page
-2. Overriding allowed plugins per site
 
 == Changelog ==
 
