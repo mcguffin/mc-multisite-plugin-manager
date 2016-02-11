@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/multisite-plugin-manager\n"
-"POT-Creation-Date: 2016-02-11 09:06+0100\n"
-"PO-Revision-Date: 2016-02-11 09:07+0100\n"
+"POT-Creation-Date: 2016-02-11 09:18+0100\n"
+"PO-Revision-Date: 2016-02-11 09:21+0100\n"
 "Last-Translator: Jörn Lund <joern@podpirate.org>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -22,27 +22,27 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: plugin-manager.php:82
+#: plugin-manager.php:81
 msgid "Plugin Management"
 msgstr "Plugin Verwaltung"
 
-#: plugin-manager.php:97
+#: plugin-manager.php:96
 msgid "Manage Plugins"
 msgstr "Plugins verwalten"
 
-#: plugin-manager.php:100
+#: plugin-manager.php:99
 msgid "Settings Saved"
 msgstr "Einstellungen gespeichert"
 
-#: plugin-manager.php:119
+#: plugin-manager.php:103
 msgid "Help"
 msgstr "Hilfe"
 
-#: plugin-manager.php:120
+#: plugin-manager.php:105
 msgid "Auto Activation"
 msgstr "Autom. Aktivierung"
 
-#: plugin-manager.php:121
+#: plugin-manager.php:106
 msgid ""
 "When auto activation is on for a plugin, newly created blogs will have that "
 "plugin activated automatically. This does not affect existing blogs."
@@ -50,19 +50,11 @@ msgstr ""
 "Bei Automatischer Aktivierung wird das Plugin auf neu erstellten Blogs "
 "automatisch aktiviert. Bestehende Blogs sind davon nicht betroffen."
 
-#: plugin-manager.php:122 plugin-manager.php:138 plugin-manager.php:352
+#: plugin-manager.php:109 plugin-manager.php:125 plugin-manager.php:322
 msgid "User Control"
 msgstr "Benutzer-Kontrolle"
 
-#: plugin-manager.php:124
-msgid ""
-"Choose if all users, pro sites only, or no one will be able to activate/"
-"deactivate the plugin through the <cite>Plugins</cite> menu. When you turn "
-"it off, users that have the plugin activated are grandfathered in, and will "
-"continue to have access until they deactivate it."
-msgstr ""
-
-#: plugin-manager.php:126
+#: plugin-manager.php:110
 msgid ""
 "When user control is enabled for a plugin, all users will be able to "
 "activate/deactivate the plugin through the <cite>Plugins</cite> menu. When "
@@ -74,11 +66,11 @@ msgstr ""
 "Benutzerkontrolle abschalten, können Blog-Admins das Plugin weiterhin nutzen "
 "bis sie es deaktivieren."
 
-#: plugin-manager.php:129
+#: plugin-manager.php:113
 msgid "Mass Activation/Deactivation"
 msgstr "Massen-Aktivierung / Deaktivierung"
 
-#: plugin-manager.php:130
+#: plugin-manager.php:115
 msgid ""
 "Mass activate and Mass deactivate buttons activate/deactivates the specified "
 "plugin for all blogs. This is different than the \"Network Activate\" option "
@@ -91,105 +83,104 @@ msgstr ""
 "später deaktivieren und es sind nur bestehende Blogs betroffen. Die Benutzer-"
 "Kontrolle wird dabei nicht Betracht gezogen."
 
-#: plugin-manager.php:135 plugin-manager.php:348
+#: plugin-manager.php:122 plugin-manager.php:318
 msgid "Name"
 msgstr "Name"
 
-#: plugin-manager.php:136 plugin-manager.php:350
+#: plugin-manager.php:123 plugin-manager.php:320
 msgid "Version"
 msgstr "Version"
 
-#: plugin-manager.php:137 plugin-manager.php:349
+#: plugin-manager.php:124 plugin-manager.php:319
 msgid "Author"
 msgstr "Autor"
 
-#: plugin-manager.php:138
+#: plugin-manager.php:125
 msgid "Users may activate/deactivate"
 msgstr "Benutzer können aktivieren / deaktivieren"
 
-#: plugin-manager.php:139
+#: plugin-manager.php:126
 msgid "Mass Activate"
 msgstr "Massen-Aktivierung"
 
-#: plugin-manager.php:140
+#: plugin-manager.php:127
 msgid "Mass Deactivate"
 msgstr "Massen-Deaktivierung"
 
-#: plugin-manager.php:187 plugin-manager.php:363
-msgid "Deny User Control"
-msgstr "Verbiete Benutzer-Kontrolle"
+#: plugin-manager.php:167 plugin-manager.php:333
+msgid "Deny"
+msgstr "Verbieten"
 
-#: plugin-manager.php:189 plugin-manager.php:380
-msgid "Pro Sites"
-msgstr "Pro-Sites"
+#: plugin-manager.php:168 plugin-manager.php:332
+msgid "Allow"
+msgstr "Erlauben"
 
-#: plugin-manager.php:190 plugin-manager.php:362
-msgid "Allow User Control"
-msgstr "Erlaube Benutzer-Kontrolle"
+#: plugin-manager.php:169
+msgid "Allow and Auto-Activate"
+msgstr "Erlauben und autom. aktivieren"
 
-#: plugin-manager.php:191 plugin-manager.php:378
-msgid "Auto-Activate (All Users)"
-msgstr "Autom. Aktivierung (Alle Benutzer)"
-
-#: plugin-manager.php:196
+#: plugin-manager.php:174
 msgid "Activate All"
 msgstr "Alle aktivieren"
 
-#: plugin-manager.php:197
+#: plugin-manager.php:175
 msgid "Deactivate All"
 msgstr "Alle deaktivieren"
 
-#: plugin-manager.php:204
+#: plugin-manager.php:182
 msgid "Update Options"
 msgstr "Einstellungen Aktualisieren"
 
-#: plugin-manager.php:341
+#: plugin-manager.php:311
 msgid "Plugin Override Options"
 msgstr "Einstellungen überschreiben"
 
-#: plugin-manager.php:343
+#: plugin-manager.php:313
 msgid ""
-"Choose “Allow User Control” if you want to allow plugin (de-)activation on "
-"this specific site. Choose “Deny User control” to always deny activation for "
-"blog users."
+"Choose “Allow” if you want to allow plugin (de-)activation on this specific "
+"site. Choose “Deny” to always deny activation for blog users."
 msgstr ""
-"Wähle \"Erlaube Benutzer-Kontrolle\" wenn Du dem Blog-Admin die "
-"(De-)Aktivierung des Plugins auf diesem Blog erlauben möchtest. Wähle "
-"\"Verbiete Benutzer-Kontrolle\" wenn Du die Kontrolle verbieten willlst."
+"Wählen Sie „Erlauben“ wenn Sie dem Blog-Admin die (De-)Aktivierung des "
+"Plugins erlauben möchten. Wählen Sie „Verbieten“ um dem Blog-Admin die "
+"(De-)Aktivierung zu verbieten. "
 
-#: plugin-manager.php:351
-msgid "Network Setting"
-msgstr "Netzwerk-Einstellung"
+#: plugin-manager.php:321
+msgid "User-Control (Network Default)"
+msgstr "Benutzerkontrolle (Netzwerk-Standard)"
 
-#: plugin-manager.php:352
+#: plugin-manager.php:322
 msgid "Blog users may activate/deactivate"
 msgstr "Blog-Admin dürfen aktivieren / deaktivieren"
 
-#: plugin-manager.php:353
+#: plugin-manager.php:323
 msgid "Activation"
 msgstr "Aktivierung"
 
-#: plugin-manager.php:361
+#: plugin-manager.php:331
 msgid "— Network default —"
 msgstr "– Netzwerk Einstellung –"
 
-#: plugin-manager.php:382
-msgid "All Users"
-msgstr "Alle Benutzer"
+#: plugin-manager.php:348
+msgid "Auto-Activate (All Users)"
+msgstr "Autom. Aktivierung (Alle Benutzer)"
 
-#: plugin-manager.php:384
-msgid "None"
-msgstr "Keine"
+#: plugin-manager.php:350
+msgid "Allowed"
+msgstr "Erlaubt"
 
-#: plugin-manager.php:405
+#: plugin-manager.php:352
+msgid "Denied"
+msgstr "Verboten"
+
+#: plugin-manager.php:373
 msgid "Deactivate plugin"
 msgstr "Plugin deaktivieren"
 
-#: plugin-manager.php:409
+#: plugin-manager.php:377
 msgid "Activate plugin"
 msgstr "Plugin aktivieren"
 
-#: plugin-manager.php:468 plugin-manager.php:496
+#: plugin-manager.php:436 plugin-manager.php:464
 msgid ""
 "Failed to mass activate: Your multisite network is too large for this "
 "function."
@@ -197,18 +188,45 @@ msgstr ""
 "Massen-Aktivierung fehlgeschlagen. Dein Multisite-Netzwer ist zu groß für "
 "diese Funktion."
 
-#: plugin-manager.php:481
+#: plugin-manager.php:449
 msgid " has been MASS ACTIVATED."
 msgstr " wurde Massen-Aktiviert."
 
-#: plugin-manager.php:483
+#: plugin-manager.php:451
 msgid "Failed to mass activate: error selecting blogs"
 msgstr "Massen-Aktiverung fehlgeschlagen: Fehelr beim auswählen der Blogs"
 
-#: plugin-manager.php:509
+#: plugin-manager.php:477
 msgid " has been MASS DEACTIVATED."
 msgstr " wurde Massen-Deaktiviert."
 
-#: plugin-manager.php:511
+#: plugin-manager.php:479
 msgid "Failed to mass deactivate: error selecting blogs"
 msgstr "Massen-Deaktiverung fehlgeschlagen: Fehelr beim auswählen der Blogs"
+
+#~ msgid "Deny User Control"
+#~ msgstr "Verbiete Benutzer-Kontrolle"
+
+#~ msgid "Allow User Control"
+#~ msgstr "Erlaube Benutzer-Kontrolle"
+
+#~ msgid "Network Setting"
+#~ msgstr "Netzwerk-Einstellung"
+
+#~ msgid "Pro Sites"
+#~ msgstr "Pro-Sites"
+
+#~ msgid ""
+#~ "Choose “Allow User Control” if you want to allow plugin (de-)activation "
+#~ "on this specific site. Choose “Deny User control” to always deny "
+#~ "activation for blog users."
+#~ msgstr ""
+#~ "Wähle \"Erlaube Benutzer-Kontrolle\" wenn Du dem Blog-Admin die "
+#~ "(De-)Aktivierung des Plugins auf diesem Blog erlauben möchtest. Wähle "
+#~ "\"Verbiete Benutzer-Kontrolle\" wenn Du die Kontrolle verbieten willlst."
+
+#~ msgid "All Users"
+#~ msgstr "Alle Benutzer"
+
+#~ msgid "None"
+#~ msgstr "Keine"
