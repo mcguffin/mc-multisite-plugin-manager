@@ -121,9 +121,9 @@ class PluginManager {
 		<?php _e('When auto activation is on for a plugin, newly created blogs will have that plugin activated automatically. This does not affect existing blogs.', 'pm'); ?></p>
 		<p><strong><?php _e('User Control', 'pm'); ?></strong><br/>
 		<?php if ( function_exists('is_pro_site') ) { ?>
-		<?php _e('Choose if all users, pro sites only, or no one will be able to activate/deactivate the plugin through the <cite>Plugins</cite> menu. When you turn it off, users that have the plugin activated are grandfathered in, and will continue to have access until they deactivate it.', 'pm'); ?>
+			<?php _e('Choose if all users, pro sites only, or no one will be able to activate/deactivate the plugin through the <cite>Plugins</cite> menu. When you turn it off, users that have the plugin activated are grandfathered in, and will continue to have access until they deactivate it.', 'pm'); ?>
 		<?php } else { ?>
-		<?php _e('When user control is enabled for a plugin, all users will be able to activate/deactivate the plugin through the <cite>Plugins</cite> menu. When you turn it off, users that have the plugin activated are grandfathered in, and will continue to have access until they deactivate it.', 'pm'); ?>
+			<?php _e('When user control is enabled for a plugin, all users will be able to activate/deactivate the plugin through the <cite>Plugins</cite> menu. When you turn it off, users that have the plugin activated are grandfathered in, and will continue to have access until they deactivate it.', 'pm'); ?>
 		<?php } ?>
 		</p>
 		<p><strong><?php _e('Mass Activation/Deactivation', 'pm'); ?></strong><br/>
@@ -184,11 +184,10 @@ class PluginManager {
 						$a_opt = '';
 						$auto_opt = '';
 		 			}
-
-		 			$opts = '<option value="none"'.$n_opt.'>' . __('None', 'pm') . '</option>'."\n";
+		 			$opts = '<option value="none"'.$n_opt.'>' . __('Deny User Control', 'pm') . '</option>'."\n";
 					if ( function_exists('is_pro_site'))
 						$opts .= '<option value="supporters"'.$s_opt.'>' . __('Pro Sites', 'pm') . '</option>'."\n";
-					$opts .= '<option value="all"'.$a_opt.'>' . __('All Users', 'pm') . '</option>'."\n";
+					$opts .= '<option value="all"'.$a_opt.'>' . __('Allow User Control', 'pm') . '</option>'."\n";
 					$opts .= '<option value="auto"'.$auto_opt.'>' . __('Auto-Activate (All Users)', 'pm') . '</option>'."\n";
 
 					echo $opts.'</select>';
@@ -341,16 +340,16 @@ class PluginManager {
 		</table>
 		<h3><?php _e('Plugin Override Options', 'pm') ?></h3>
 		<p style="padding:5px 10px 0 10px;margin:0;">
-			<?php _e('Checked plugins here will be accessible to this site, overriding the sitewide <a href="plugins.php?page=plugin-management">Plugin Management</a> settings. Uncheck to return to sitewide settings.', 'pm') ?>
+			<?php _e('Choose “Allow User Control” if you want to allow plugin (de-)activation on this specific site. Choose “Deny User control” to always deny activation for blog users.', 'pm') ?>
 		</p>
 		<table class="widefat" style="margin:10px;width:95%;">
 			<thead>
 				<tr>
-					<th title="<?php _e('Blog users may activate/deactivate', 'pm') ?>"><?php _e('User Control', 'pm') ?></th>
-					<th><?php _e('Network Setting', 'pm'); ?></th>
 					<th><?php _e('Name', 'pm'); ?></th>
-					<th><?php _e('Version', 'pm'); ?></th>
 					<th><?php _e('Author', 'pm'); ?></th>
+					<th><?php _e('Version', 'pm'); ?></th>
+					<th><?php _e('Network Setting', 'pm'); ?></th>
+					<th title="<?php _e('Blog users may activate/deactivate', 'pm') ?>"><?php _e('User Control', 'pm') ?></th>
 					<th><?php _e('Activation', 'pm'); ?></th>
 				</tr>
 			</thead>
@@ -371,6 +370,20 @@ class PluginManager {
 				continue;
 			?>
 			<tr>
+				<td><?php echo $p['Name']?></td>
+				<td><?php echo $p['Author']?></td>
+				<td><?php echo $p['Version']?></td>
+				<td><?php 
+					if ( in_array( $file, $auto_activate ) ) {
+						_e('Auto-Activate (All Users)', 'pm');
+					} else if ( function_exists('is_pro_site') && in_array( $file, $supporter_control ) ) {
+						_e('Pro Sites', 'pm');
+					} else if ( in_array( $file, $user_control ) ) {
+						_e('All Users', 'pm');
+					} else {
+						_e('None', 'pm');
+					}
+				?></td>
 				<td>
 				<?php
 
@@ -386,20 +399,6 @@ class PluginManager {
 					  echo '</select>'
 				?>
 				</td>
-				<td><?php 
-					if ( in_array( $file, $auto_activate ) ) {
-						_e('Auto-Activate (All Users)', 'pm');
-					} else if ( function_exists('is_pro_site') && in_array( $file, $supporter_control ) ) {
-						_e('Pro Sites', 'pm');
-					} else if ( in_array( $file, $user_control ) ) {
-						_e('All Users', 'pm');
-					} else {
-						_e('None', 'pm');
-					}
-				?></td>
-				<td><?php echo $p['Name']?></td>
-				<td><?php echo $p['Version']?></td>
-				<td><?php echo $p['Author']?></td>
 				<td><?php 
 					if ( is_plugin_active( $file) ) {
 						?><button class="button" type="submit" name="deactivate-plugin" value="<?php esc_attr_e($file); ?>"><?php
@@ -588,7 +587,6 @@ class PluginManager {
 		return;
 	}
 
-	//
 	/**
 	 *	use jquery to remove associated checkboxes to prevent mass activation (usability, not security)
 	 *
