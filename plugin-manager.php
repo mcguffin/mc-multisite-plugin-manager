@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Multisite Plugin Manager
-Plugin URI: http://wordpress.org/extend/plugins/multisite-plugin-manager/
-Description: The essential plugin for every multisite install! Manage plugin access permissions across your entire multisite network.
-Version: 3.1.4
-Author: Aaron Edwards
+Plugin Name: Multisite Plugin Manager (mcguffin)
+Plugin URI: https://github.com/mcguffin/multisite-plugin-manager
+Description: This is a fork of <a href="https://github.com/uglyrobot/multisite-plugin-manager">https://github.com/uglyrobot/multisite-plugin-manager</a> by Aaron Edwards. The essential plugin for every multisite install! Manage plugin access permissions across your entire multisite network.
+Version: 3.2.0
+Author: Aaron Edwards, Jörn Lund
 Author URI: http://uglyrobot.com
 Network: true
 
@@ -25,8 +25,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 class PluginManager {
-
-	function __construct() {
+	
+	private static $instance = null;
+	
+	/**
+	 *	Get instance
+	 */
+	public static function getInstance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+	
+	/**
+	 *	prevent cloning
+	 */
+	private function __clone() { }
+	
+	private function __construct() {
 		//declare hooks
 		add_action( 'network_admin_menu', array( &$this, 'add_menu' ) );
 		add_action( 'wpmu_new_blog', array( &$this, 'new_blog' ), 50 ); //auto activation hook
@@ -546,4 +563,4 @@ class PluginManager {
 	}
 }
 
-$pm = new PluginManager();
+$pm = PluginManager::getInstance();
