@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/multisite-plugin-manager\n"
-"POT-Creation-Date: 2016-02-11 09:18+0100\n"
-"PO-Revision-Date: 2016-02-11 09:21+0100\n"
+"POT-Creation-Date: 2016-02-11 09:26+0100\n"
+"PO-Revision-Date: 2016-02-11 20:40+0100\n"
 "Last-Translator: Jörn Lund <joern@podpirate.org>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -107,15 +107,15 @@ msgstr "Massen-Aktivierung"
 msgid "Mass Deactivate"
 msgstr "Massen-Deaktivierung"
 
-#: plugin-manager.php:167 plugin-manager.php:333
+#: plugin-manager.php:167 plugin-manager.php:333 plugin-manager.php:360
 msgid "Deny"
 msgstr "Verbieten"
 
-#: plugin-manager.php:168 plugin-manager.php:332
+#: plugin-manager.php:168 plugin-manager.php:332 plugin-manager.php:355
 msgid "Allow"
 msgstr "Erlauben"
 
-#: plugin-manager.php:169
+#: plugin-manager.php:169 plugin-manager.php:350
 msgid "Allow and Auto-Activate"
 msgstr "Erlauben und autom. aktivieren"
 
@@ -160,27 +160,15 @@ msgstr "Aktivierung"
 msgid "— Network default —"
 msgstr "– Netzwerk Einstellung –"
 
-#: plugin-manager.php:348
-msgid "Auto-Activate (All Users)"
-msgstr "Autom. Aktivierung (Alle Benutzer)"
-
-#: plugin-manager.php:350
-msgid "Allowed"
-msgstr "Erlaubt"
-
-#: plugin-manager.php:352
-msgid "Denied"
-msgstr "Verboten"
-
-#: plugin-manager.php:373
+#: plugin-manager.php:382
 msgid "Deactivate plugin"
 msgstr "Plugin deaktivieren"
 
-#: plugin-manager.php:377
+#: plugin-manager.php:386
 msgid "Activate plugin"
 msgstr "Plugin aktivieren"
 
-#: plugin-manager.php:436 plugin-manager.php:464
+#: plugin-manager.php:445 plugin-manager.php:473
 msgid ""
 "Failed to mass activate: Your multisite network is too large for this "
 "function."
@@ -188,21 +176,30 @@ msgstr ""
 "Massen-Aktivierung fehlgeschlagen. Dein Multisite-Netzwer ist zu groß für "
 "diese Funktion."
 
-#: plugin-manager.php:449
+#: plugin-manager.php:458
 msgid " has been MASS ACTIVATED."
 msgstr " wurde Massen-Aktiviert."
 
-#: plugin-manager.php:451
+#: plugin-manager.php:460
 msgid "Failed to mass activate: error selecting blogs"
 msgstr "Massen-Aktiverung fehlgeschlagen: Fehelr beim auswählen der Blogs"
 
-#: plugin-manager.php:477
+#: plugin-manager.php:486
 msgid " has been MASS DEACTIVATED."
 msgstr " wurde Massen-Deaktiviert."
 
-#: plugin-manager.php:479
+#: plugin-manager.php:488
 msgid "Failed to mass deactivate: error selecting blogs"
 msgstr "Massen-Deaktiverung fehlgeschlagen: Fehelr beim auswählen der Blogs"
+
+#~ msgid "Auto-Activate (All Users)"
+#~ msgstr "Autom. Aktivierung (Alle Benutzer)"
+
+#~ msgid "Allowed"
+#~ msgstr "Erlaubt"
+
+#~ msgid "Denied"
+#~ msgstr "Verboten"
 
 #~ msgid "Deny User Control"
 #~ msgstr "Verbiete Benutzer-Kontrolle"
